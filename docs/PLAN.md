@@ -6,7 +6,7 @@ Cada tarea es **un commit**. El mensaje del commit empieza con el código de la 
 
 - [x] **T-01** Estructura del repo, README inicial, `.gitignore`, `AGENTS.md`, `docs/SPEC.md` y `docs/PLAN.md`
 - [x] **T-02** Backend base: Express, `/api/salud`, manejo central de errores, primer test (RN-01)
-- [ ] **T-03** Dominio: enums, errores, validaciones de texto y reloj inyectable (RN-01)
+- [x] **T-03** Dominio: enums, errores, validaciones de texto y reloj inyectable (RN-01)
 - [ ] **T-04** Categorías: dominio, repositorio en memoria, servicio, rutas y tests (RN-02, RN-03)
 - [ ] **T-05** Problemas: crear, consultar y editar (RN-04 a RN-06)
 - [ ] **T-06** Ocurrencias: CRUD y datos derivados (RN-07, RN-09)
@@ -34,3 +34,5 @@ Decisiones tomadas durante el desarrollo sobre puntos que la spec no detalla. En
 |---|---|---|
 | D-01 | Lenguaje y módulos | JavaScript con módulos ES (`import`/`export`) y Node.js 22 LTS. |
 | D-02 | Dependencias | Producción: `express` (servidor HTTP), `pg` (driver de PostgreSQL), `cors` (permitir que el frontend en Netlify llame a la API). Desarrollo: `supertest` (tests HTTP sin levantar un puerto). |
+| D-03 | Zona horaria | Las fechas de calendario (fecha de aplicación, "hoy") y los patrones por día y franja horaria se calculan en hora de Argentina (`America/Argentina/Buenos_Aires`). Las fechas con hora se guardan en UTC. |
+| D-04 | Formato de fechas en la API | Fecha y hora en ISO 8601 (`2026-11-20T09:30:00-03:00`); fecha de calendario como `AAAA-MM-DD`. Un número entero puede enviarse como número o como texto (`3` o `"3"`). |
