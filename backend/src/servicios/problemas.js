@@ -1,6 +1,6 @@
 import { validarProblema, valoresIniciales, datosDerivados, calcularPrioridad } from '../dominio/problema.js';
 import { asegurarNombreUnico, idValido } from '../dominio/validaciones.js';
-import { errorNoEncontrado } from '../dominio/errores.js';
+import { errorNoEncontrado, errorConflicto } from '../dominio/errores.js';
 import { validarCambioEstado } from '../dominio/estados.js';
 import { MOTIVOS_CAMBIO } from '../dominio/enums.js';
 
@@ -85,6 +85,23 @@ export function crearServicioProblemas({ repos, reloj, categorias }) {
       const actual = await obtenerOFallar(id);
       const valido = await validarYVerificar(datos, actual.id);
       return vistaDe(await repos.problemas.actualizar(actual.id, valido));
+    },
+
+    // RN-18: si tiene registros asociados, hay que confirmar el borrado. Se borra todo en cascada.
+    async eliminar(id, confirmar) {
+      const problema = await obtenerOFallar(id);
+      const filtro = { problemaId: problema.id };
+      const [ocurrencias, soluciones, cambiosEstado] = await Promise.all([
+        repos.ocurrencias.listar(filtro), repos.soluciones.listar(filtro), repos.cambiosEstado.listar(filtro),
+      ]);
+      const asociados = { ocurrencias: ocurrencias.length, soluciones: soluciones.length, cambiosEstado: cambiosEstado.length };
+      const total = asociados.ocurrencias + asociados.soluciones + asociados.cambiosEstado;
+      if (total > 0 && confirmar !== true) {
+        throw errorConflicto(
+          `El problema "${problema.nombre}" tiene ${total} registro(s) asociado(s) que también se van a borrar. ` +
+          'Confirmá la eliminación con ?confirmar=true', 'RN-18', asociados);
+      }
+      await repos.problemas.eliminar(problema.id);
     },
 
     // RN-14 a RN-16: cambio manual de estado.

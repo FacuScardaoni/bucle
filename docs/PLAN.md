@@ -14,7 +14,7 @@ Cada tarea es **un commit**. El mensaje del commit empieza con el código de la 
 - [x] **T-08** Soluciones: CRUD y evaluación (RN-11 a RN-13)
 - [x] **T-09** Estados, cambios de estado y consistencia (RN-14 a RN-17)
 - [x] **T-10** Recaída automática (RN-10)
-- [ ] **T-11** Eliminación con confirmación y en cascada (RN-18)
+- [x] **T-11** Eliminación con confirmación y en cascada (RN-18)
 - [ ] **T-12** Búsqueda, filtros y orden (RN-19)
 - [ ] **T-13** Historial (RN-22)
 - [ ] **T-14** Estadísticas y efectividad (RN-20, RN-21)

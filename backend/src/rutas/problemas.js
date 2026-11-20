@@ -19,6 +19,11 @@ export function crearRutasProblemas({ problemas }) {
     res.json(await problemas.actualizar(req.params.id, req.body));
   });
 
+  rutas.delete('/:id', async (req, res) => {
+    await problemas.eliminar(req.params.id, req.query.confirmar === 'true');
+    res.status(204).end();
+  });
+
   rutas.patch('/:id/estado', async (req, res) => {
     res.json(await problemas.cambiarEstado(req.params.id, req.body));
   });
