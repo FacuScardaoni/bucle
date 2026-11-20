@@ -358,3 +358,79 @@ textarea { resize: vertical; }
   .ficha__acciones .boton { flex: 1 1 100%; }
   .estados__opcion { font-size: 0.85rem; }
 }
+
+/* ---------- Historial: línea de tiempo ---------- */
+
+.linea-tiempo { list-style: none; margin: 0; padding: 0 0 0 1.5rem; position: relative; }
+.linea-tiempo::before {
+  content: ''; position: absolute; left: 0.45rem; top: 0.5rem; bottom: 0.5rem; width: 2px; background: var(--linea);
+}
+.evento { position: relative; padding: 0 0 1.25rem 0.75rem; }
+.evento::before {
+  content: ''; position: absolute; left: -1.4rem; top: 0.35rem;
+  width: 0.85rem; height: 0.85rem; border-radius: 50%;
+  background: var(--superficie); border: 3px solid var(--tinta-suave);
+}
+.evento--ocurrencia::before { border-color: var(--alerta); }
+.evento--solucion_aplicada::before { border-color: var(--bucle); }
+.evento--solucion_evaluada::before { border-color: var(--bucle); background: var(--bucle); }
+.evento--estado::before { border-color: var(--resuelto); background: var(--resuelto); }
+.evento--recaida::before { border-color: var(--alerta); background: var(--alerta); }
+.evento__fecha { display: block; font-size: 0.85rem; color: var(--tinta-suave); }
+.evento__titulo { font: 600 1.02rem/1.35 var(--letra-titulos); margin: 0.1rem 0 0; }
+.evento__texto { margin: 0.15rem 0 0; max-width: 65ch; }
+.evento__nota { margin: 0.1rem 0 0; font-size: 0.88rem; color: var(--tinta-suave); }
+
+/* ---------- Estadísticas del problema ---------- */
+
+.datos {
+  display: grid; grid-template-columns: repeat(4, 1fr); margin: 0;
+  background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio);
+}
+.dato { padding: 1.1rem 1.2rem; display: flex; flex-direction: column; }
+.dato dd { order: -1; }
+.dato + .dato { border-left: 1px solid var(--linea); }
+.dato__valor { margin: 0; font: 700 2.2rem/1.1 var(--letra-titulos); color: var(--bucle-oscuro); }
+.dato__etiqueta { color: var(--tinta-suave); font-size: 0.9rem; }
+.patrones { margin-top: 1.5rem; }
+.patrones h2 { margin-top: 1.25rem; font-size: 1.1rem; }
+.mejor-solucion { margin-top: 0.75rem; padding: 0.7rem 0.9rem; border-left: 4px solid var(--resuelto); background: var(--resuelto-claro); border-radius: var(--radio-chico); }
+
+/* ---------- Categorías ---------- */
+
+.categoria__nombre { font-size: 1.1rem; margin: 0; }
+
+/* ---------- Resumen ---------- */
+
+.resumen__frase { font: 500 1.2rem/1.4 var(--letra-titulos); max-width: 40ch; }
+.estados-barra { margin: 1.25rem 0 2rem; }
+.estados-barra__barra { display: flex; gap: 3px; height: 1.1rem; border-radius: 999px; overflow: hidden; }
+.estados-barra__parte { flex-basis: 0; }
+.estados-barra__parte--activo { background: var(--alerta); }
+.estados-barra__parte--controlado { background: var(--control); }
+.estados-barra__parte--solucionado { background: var(--resuelto); }
+.estados-barra__leyenda { display: flex; flex-wrap: wrap; gap: 0.4rem 1.5rem; margin-top: 0.6rem; color: var(--tinta-suave); }
+.leyenda { display: inline-flex; align-items: center; gap: 0.35rem; }
+.leyenda::before { content: ''; width: 0.7rem; height: 0.7rem; border-radius: 3px; }
+.leyenda strong { color: var(--tinta); font-family: var(--letra-titulos); }
+.leyenda--activo::before { background: var(--alerta); }
+.leyenda--controlado::before { background: var(--control); }
+.leyenda--solucionado::before { background: var(--resuelto); }
+
+.resumen__columnas { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+.resumen__columnas h2 { margin-bottom: 0; }
+.ranking { margin: 0.75rem 0 0; padding-left: 1.4rem; display: grid; gap: 0.75rem; }
+.ranking--sin-numeros { list-style: none; padding-left: 0; }
+.ranking__fila { display: grid; grid-template-columns: 1fr auto; gap: 0.25rem 0.75rem; }
+.ranking__fila::marker { font: 600 0.95rem var(--letra-titulos); color: var(--tinta-suave); }
+.ranking__nombre a { color: var(--tinta); text-underline-offset: 3px; }
+.ranking__valor { font: 700 1rem var(--letra-titulos); }
+.ranking__barra { grid-column: 1 / -1; height: 6px; background: var(--linea); border-radius: 999px; overflow: hidden; }
+.ranking__barra span { display: block; height: 100%; background: var(--bucle); border-radius: 999px; }
+
+@media (max-width: 40rem) {
+  .datos { grid-template-columns: 1fr 1fr; }
+  .dato:nth-child(3) { border-left: none; }
+  .dato:nth-child(n + 3) { border-top: 1px solid var(--linea); }
+  .resumen__columnas { grid-template-columns: 1fr; }
+}

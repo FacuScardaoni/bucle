@@ -9,8 +9,10 @@ import {
 } from '../formularios.js';
 
 const PESTANAS = [
+  { id: 'historial', titulo: 'Historial', mostrar: mostrarHistorial },
   { id: 'ocurrencias', titulo: 'Ocurrencias', mostrar: mostrarOcurrencias },
   { id: 'soluciones', titulo: 'Soluciones', mostrar: mostrarSoluciones },
+  { id: 'estadisticas', titulo: 'Estadísticas', mostrar: mostrarEstadisticas },
 ];
 
 export async function mostrarDetalle(contenedor, id, pestanaPedida) {
@@ -29,6 +31,9 @@ export async function mostrarDetalle(contenedor, id, pestanaPedida) {
       }, p.titulo))),
     panel);
 
+  // En pantallas chicas, la fila de pestañas se desplaza para que se vea la elegida.
+  const elegida = document.getElementById(`pestana-${pestana.id}`);
+  elegida.parentElement.scrollLeft = elegida.offsetLeft - 16;
   await pestana.mostrar(panel, problema, recargar);
 }
 
@@ -234,4 +239,76 @@ export function bloqueEfectividad(e) {
     h('p', { class: 'efectividad__detalle' },
       `Según tus datos: antes pasaba ${numero(e.tasaSemanalAntes)} ${e.tasaSemanalAntes === 1 ? 'vez' : 'veces'} por semana; `
       + `después, ${numero(e.tasaSemanalDespues)} (${e.diasObservados} días observados).`));
+}
+
+// ---------- Pestaña: historial (RN-22) ----------
+
+function textoEvento(e) {
+  switch (e.tipo) {
+    case 'OCURRENCIA':
+      return { titulo: 'Volvió a pasar', texto: e.descripcion, nota: `Gravedad: ${GRAVEDADES[e.gravedad].toLowerCase()}` };
+    case 'SOLUCION_APLICADA':
+      return { titulo: `Empezaste a probar "${e.nombre}"` };
+    case 'SOLUCION_EVALUADA':
+      return { titulo: `"${e.nombre}": ${RESULTADOS[e.resultado].toLowerCase()}`, texto: e.observaciones };
+    case 'CAMBIO_ESTADO':
+      return e.motivo === 'RECAIDA'
+        ? { titulo: 'Recaída: volvió a activo', texto: 'Pasó otra vez después de haberlo marcado como solucionado.' }
+        : { titulo: `Pasó a ${ESTADOS[e.estadoNuevo].toLowerCase()}` };
+    default:
+      return { titulo: e.tipo };
+  }
+}
+
+async function mostrarHistorial(panel, problema) {
+  const eventos = await api.get(`/problemas/${problema.id}/historial`);
+  if (eventos.length === 0) {
+    return vaciar(panel, h('div', { class: 'vacio' },
+      h('p', {}, 'Acá vas a ver, en orden, cada vez que pasó, las soluciones que probaste y los cambios de estado.')));
+  }
+  vaciar(panel, h('ol', { class: 'linea-tiempo' }, eventos.map((e) => {
+    const { titulo, texto, nota } = textoEvento(e);
+    const fecha = e.tipo === 'SOLUCION_APLICADA' ? fechaCalendario(e.fechaAplicacion) : fechaHora(e.fecha);
+    const tono = e.tipo === 'CAMBIO_ESTADO' ? (e.motivo === 'RECAIDA' ? 'recaida' : 'estado') : e.tipo.toLowerCase();
+    return h('li', { class: `evento evento--${tono}` },
+      h('time', { class: 'evento__fecha', datetime: e.fecha }, fecha),
+      h('p', { class: 'evento__titulo' }, titulo),
+      texto ? h('p', { class: 'evento__texto' }, texto) : null,
+      nota ? h('p', { class: 'evento__nota' }, nota) : null);
+  })));
+}
+
+// ---------- Pestaña: estadísticas (RN-21) ----------
+
+async function mostrarEstadisticas(panel, problema) {
+  const e = await api.get(`/problemas/${problema.id}/estadisticas`);
+  if (e.totalOcurrencias === 0) {
+    return vaciar(panel, h('div', { class: 'vacio' },
+      h('p', {}, 'Las estadísticas aparecen cuando registrás ocurrencias.')));
+  }
+  const dato = (valor, etiqueta) => h('div', { class: 'dato' },
+    h('dt', { class: 'dato__etiqueta' }, etiqueta), h('dd', { class: 'dato__valor' }, valor));
+  const veces = (n) => `${n} ${n === 1 ? 'vez' : 'veces'}`;
+  const sr = e.solucionesPorResultado;
+  const totalSoluciones = Object.values(sr).reduce((a, b) => a + b, 0);
+
+  vaciar(panel,
+    h('dl', { class: 'datos' },
+      dato(e.totalOcurrencias, 'veces en total'),
+      dato(e.ocurrenciasUltimos30Dias, 'en los últimos 30 días'),
+      dato(numero(e.promedioSemanal), 'por semana, en promedio'),
+      dato(numero(e.gravedadPromedio), 'de gravedad promedio (1 a 5)')),
+    h('div', { class: 'patrones' },
+      h('h2', {}, 'Cuándo pasa más'),
+      h('p', {}, 'Más seguido los ', h('strong', {}, e.diaMasFrecuente.dia), ` (${veces(e.diaMasFrecuente.cantidad)}) `,
+        'y a la ', h('strong', {}, e.franjaMasFrecuente.franja), ` (${veces(e.franjaMasFrecuente.cantidad)}).`),
+      h('h2', {}, 'Soluciones'),
+      totalSoluciones === 0
+        ? h('p', {}, 'Todavía no registraste soluciones.')
+        : h('ul', { class: 'lista-simple' },
+          Object.entries(sr).filter(([, n]) => n > 0).map(([r, n]) => h('li', {}, `${RESULTADOS[r]}: ${n}`))),
+      e.mejorSolucion
+        ? h('p', { class: 'mejor-solucion' }, 'La que mejor resultado dio según tus datos: ',
+          h('strong', {}, e.mejorSolucion.nombre), ` (${e.mejorSolucion.mejoraPorcentaje} % menos seguido).`)
+        : null));
 }

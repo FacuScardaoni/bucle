@@ -3,6 +3,8 @@ import { api, ErrorApi } from './api.js';
 import { h, vaciar } from './ui.js';
 import { mostrarListado } from './vistas/listado.js';
 import { mostrarDetalle } from './vistas/detalle.js';
+import { mostrarCategorias } from './vistas/categorias.js';
+import { mostrarResumen } from './vistas/resumen.js';
 
 const contenido = document.getElementById('contenido');
 
@@ -10,6 +12,8 @@ const contenido = document.getElementById('contenido');
 const rutas = [
   { patron: /^#?\/?$/, seccion: 'problemas', mostrar: () => mostrarListado(contenido) },
   { patron: /^#\/problemas\/(\d+)(?:\/([a-z]+))?$/, seccion: 'problemas', mostrar: (id, pestana) => mostrarDetalle(contenido, id, pestana) },
+  { patron: /^#\/categorias$/, seccion: 'categorias', mostrar: () => mostrarCategorias(contenido) },
+  { patron: /^#\/resumen$/, seccion: 'resumen', mostrar: () => mostrarResumen(contenido) },
 ];
 
 async function navegar() {
