@@ -1,7 +1,7 @@
 import { textoObligatorio, textoOpcional, normalizar, idValido } from './validaciones.js';
 import { errorValidacion } from './errores.js';
 import { ESTADOS, PRIORIDADES } from './enums.js';
-import { restarDias } from './fechas.js';
+import { restarDias, inicioDelDia, fechaCalendario, diasEntre } from './fechas.js';
 
 // RN-04 y RN-05: datos editables de un problema.
 // Estado, fechas, cantidad y prioridad NO se toman del cliente (RN-06).
@@ -44,4 +44,17 @@ export function calcularPrioridad(ocurrencias, ahora) {
   let nivel = recientes.length >= 5 ? 2 : recientes.length >= 2 ? 1 : 0;
   if (recientes.some((o) => o.gravedad >= 4)) nivel = Math.min(nivel + 1, 2);
   return PRIORIDADES[nivel];
+}
+
+// Cantidad de ocurrencias por día en los últimos N días (índice 0 = hoy), en hora de Argentina.
+// La interfaz la usa para dibujar el "anillo" de actividad de cada problema.
+export function actividadPorDia(ocurrencias, ahora, dias = DIAS_VENTANA_PRIORIDAD) {
+  const actividad = new Array(dias).fill(0);
+  const hoy = inicioDelDia(fechaCalendario(ahora));
+  for (const o of ocurrencias) {
+    const dia = inicioDelDia(fechaCalendario(new Date(o.fecha)));
+    const indice = Math.round(diasEntre(dia, hoy));
+    if (indice >= 0 && indice < dias) actividad[indice] += 1;
+  }
+  return actividad;
 }
