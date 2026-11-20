@@ -2,6 +2,7 @@ import { validarProblema, valoresIniciales, datosDerivados, calcularPrioridad } 
 import { asegurarNombreUnico, idValido } from '../dominio/validaciones.js';
 import { errorNoEncontrado, errorConflicto } from '../dominio/errores.js';
 import { validarCambioEstado } from '../dominio/estados.js';
+import { validarFiltros, filtrarYOrdenar } from '../dominio/busqueda.js';
 import { MOTIVOS_CAMBIO } from '../dominio/enums.js';
 
 function agruparPorProblema(registros) {
@@ -61,14 +62,17 @@ export function crearServicioProblemas({ repos, reloj, categorias }) {
     obtenerOFallar,
     aplicarCambioEstado,
 
-    async listar() {
+    // F-08 / RN-19: listado con búsqueda, filtros y orden.
+    async listar(query = {}) {
       const [problemas, cats, ocurrencias] = await Promise.all([
         repos.problemas.listar(), repos.categorias.listar(), repos.ocurrencias.listar(),
       ]);
+      const filtros = validarFiltros(query, cats.map((c) => c.id));
       const categoriasPorId = new Map(cats.map((c) => [c.id, c]));
       const ocurrenciasPorProblema = agruparPorProblema(ocurrencias);
-      return problemas.map((p) =>
+      const vistas = problemas.map((p) =>
         aVista(p, categoriasPorId.get(p.categoriaId), ocurrenciasPorProblema.get(p.id) ?? []));
+      return filtrarYOrdenar(vistas, filtros);
     },
 
     async obtener(id) {

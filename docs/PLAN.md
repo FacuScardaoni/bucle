@@ -15,7 +15,7 @@ Cada tarea es **un commit**. El mensaje del commit empieza con el código de la 
 - [x] **T-09** Estados, cambios de estado y consistencia (RN-14 a RN-17)
 - [x] **T-10** Recaída automática (RN-10)
 - [x] **T-11** Eliminación con confirmación y en cascada (RN-18)
-- [ ] **T-12** Búsqueda, filtros y orden (RN-19)
+- [x] **T-12** Búsqueda, filtros y orden (RN-19)
 - [ ] **T-13** Historial (RN-22)
 - [ ] **T-14** Estadísticas y efectividad (RN-20, RN-21)
 - [ ] **T-15** Repositorios PostgreSQL, `schema.sql` y `seed.sql`
@@ -43,3 +43,4 @@ Decisiones tomadas durante el desarrollo sobre puntos que la spec no detalla. En
 | D-09 | Ventana de 14 días (RN-15) | Se aplica igual que la de 30 días: ocurrencias con fecha posterior a `ahora − 14 días`. Si faltan varias condiciones, el error las lista todas en `detalles.faltan`. |
 | D-10 | Alcance de RN-17 | La consistencia se verifica solo sobre la condición de soluciones (RN-14 / RN-15), que es lo único que cambia al eliminar o reevaluar una solución. |
 | D-11 | Aviso de recaída | Al crear o editar una ocurrencia, la respuesta incluye `recaida: true/false` para que la interfaz avise que el problema volvió a ACTIVO. La ocurrencia y el cambio de estado se guardan en la misma transacción. |
+| D-12 | Parámetros de búsqueda | `GET /api/problemas?q=&categoria=&estado=&prioridad=`. Un parámetro vacío equivale a no enviarlo. Repetir un parámetro (`?estado=A&estado=B`) da error 400. Ante empate de prioridad y fecha, se ordena por nombre. |
