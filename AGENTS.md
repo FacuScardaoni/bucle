@@ -9,6 +9,7 @@ Este archivo le explica a cualquier agente de IA (Claude, Copilot, Cursor, etc.)
 - Especificación (fuente de verdad): [`docs/SPEC.md`](docs/SPEC.md). Funcionalidades F-01 a F-10, reglas de negocio RN-01 a RN-22.
 - Plan de trabajo: [`docs/PLAN.md`](docs/PLAN.md).
 - Informe de pruebas: [`docs/INFORME_PRUEBAS.md`](docs/INFORME_PRUEBAS.md).
+- Relevamiento y manuales: [`docs/RELEVAMIENTO.md`](docs/RELEVAMIENTO.md), [`docs/MANUAL_USUARIO.md`](docs/MANUAL_USUARIO.md), [`docs/MANUAL_TECNICO.md`](docs/MANUAL_TECNICO.md). Si un cambio afecta el uso, la API o la publicación, actualizar el manual correspondiente.
 
 ## Stack
 

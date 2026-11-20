@@ -97,10 +97,15 @@ Ningún secreto está en el repositorio: la cadena de conexión vive solo en las
 
 ## Documentación
 
-- [`docs/SPEC.md`](docs/SPEC.md): especificación, modelo de datos, reglas de negocio y API.
-- [`docs/PLAN.md`](docs/PLAN.md): plan de 21 tareas (una por commit) y decisiones tomadas.
-- [`docs/INFORME_PRUEBAS.md`](docs/INFORME_PRUEBAS.md): informe de pruebas.
-- [`AGENTS.md`](AGENTS.md): instrucciones para agentes de IA.
+| Documento | Contenido |
+|---|---|
+| [Relevamiento](docs/RELEVAMIENTO.md) | Contexto, problema, usuarios, requerimientos, casos de uso, diagramas, riesgos y factibilidad. |
+| [Especificación (SPEC)](docs/SPEC.md) | Funcionalidades, modelo de datos, reglas de negocio RN-01 a RN-22 y API. |
+| [Manual de usuario](docs/MANUAL_USUARIO.md) | Cómo usar la aplicación paso a paso, con capturas. |
+| [Manual técnico](docs/MANUAL_TECNICO.md) | Arquitectura, instalación, API, base de datos, pruebas, publicación y mantenimiento. |
+| [Plan de desarrollo](docs/PLAN.md) | 24 tareas (una por commit) y decisiones tomadas. |
+| [Informe de pruebas](docs/INFORME_PRUEBAS.md) | Resultados de los tests, pruebas manuales y prueba en producción. |
+| [AGENTS.md](AGENTS.md) | Instrucciones para agentes de IA que trabajen en el repositorio. |
 
 ## Limitaciones conocidas
 
@@ -112,7 +117,7 @@ Ningún secreto está en el repositorio: la cadena de conexión vive solo en las
 ```
 bucle/
 ├── AGENTS.md · README.md
-├── docs/        SPEC.md · PLAN.md · INFORME_PRUEBAS.md · capturas/
+├── docs/        RELEVAMIENTO.md · SPEC.md · MANUAL_USUARIO.md · MANUAL_TECNICO.md · PLAN.md · INFORME_PRUEBAS.md · capturas/
 ├── backend/     src/ (dominio, servicios, repositorios, rutas) · db/ · test/
 └── frontend/    index.html · css/ · js/ (api, ui, formularios, vistas/) · netlify.toml
 ```
