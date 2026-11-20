@@ -13,7 +13,7 @@ Cada tarea es **un commit**. El mensaje del commit empieza con el código de la 
 - [x] **T-07** Prioridad calculada (RN-08)
 - [x] **T-08** Soluciones: CRUD y evaluación (RN-11 a RN-13)
 - [x] **T-09** Estados, cambios de estado y consistencia (RN-14 a RN-17)
-- [ ] **T-10** Recaída automática (RN-10)
+- [x] **T-10** Recaída automática (RN-10)
 - [ ] **T-11** Eliminación con confirmación y en cascada (RN-18)
 - [ ] **T-12** Búsqueda, filtros y orden (RN-19)
 - [ ] **T-13** Historial (RN-22)
@@ -42,3 +42,4 @@ Decisiones tomadas durante el desarrollo sobre puntos que la spec no detalla. En
 | D-08 | Solución evaluada con fecha futura | Como una solución futura no se puede evaluar (RN-13), tampoco se permite editar la fecha de aplicación de una solución ya evaluada a una fecha futura. Una solución aplicada "hoy" ya puede evaluarse. |
 | D-09 | Ventana de 14 días (RN-15) | Se aplica igual que la de 30 días: ocurrencias con fecha posterior a `ahora − 14 días`. Si faltan varias condiciones, el error las lista todas en `detalles.faltan`. |
 | D-10 | Alcance de RN-17 | La consistencia se verifica solo sobre la condición de soluciones (RN-14 / RN-15), que es lo único que cambia al eliminar o reevaluar una solución. |
+| D-11 | Aviso de recaída | Al crear o editar una ocurrencia, la respuesta incluye `recaida: true/false` para que la interfaz avise que el problema volvió a ACTIVO. La ocurrencia y el cambio de estado se guardan en la misma transacción. |

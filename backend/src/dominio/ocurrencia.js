@@ -1,5 +1,6 @@
 import { textoObligatorio, textoOpcional, enteroEnRango, fechaHoraValida } from './validaciones.js';
 import { errorValidacion } from './errores.js';
+import { ESTADOS } from './enums.js';
 
 // RN-09: fecha obligatoria y no futura, descripción de 3 a 300, gravedad entera de 1 a 5.
 export function validarOcurrencia(datos = {}, ahora) {
@@ -17,3 +18,10 @@ export function validarOcurrencia(datos = {}, ahora) {
 }
 
 export const porFechaDescendente = (a, b) => new Date(b.fecha) - new Date(a.fecha);
+
+// RN-10: una ocurrencia posterior al momento en que el problema se marcó SOLUCIONADO es una recaída.
+// Una carga retroactiva (fecha anterior) no cambia el estado.
+export function esRecaida(problema, fechaOcurrencia) {
+  return problema.estado === ESTADOS.SOLUCIONADO
+    && new Date(fechaOcurrencia) > new Date(problema.fechaEstado);
+}
