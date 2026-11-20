@@ -8,7 +8,7 @@ Cada tarea es **un commit**. El mensaje del commit empieza con el código de la 
 - [x] **T-02** Backend base: Express, `/api/salud`, manejo central de errores, primer test (RN-01)
 - [x] **T-03** Dominio: enums, errores, validaciones de texto y reloj inyectable (RN-01)
 - [x] **T-04** Categorías: dominio, repositorio en memoria, servicio, rutas y tests (RN-02, RN-03)
-- [ ] **T-05** Problemas: crear, consultar y editar (RN-04 a RN-06)
+- [x] **T-05** Problemas: crear, consultar y editar (RN-04 a RN-06)
 - [ ] **T-06** Ocurrencias: CRUD y datos derivados (RN-07, RN-09)
 - [ ] **T-07** Prioridad calculada (RN-08)
 - [ ] **T-08** Soluciones: CRUD y evaluación (RN-11 a RN-13)

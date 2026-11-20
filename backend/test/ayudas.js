@@ -27,3 +27,9 @@ export async function crearCategoria(api, nombre = 'Puntualidad') {
   const res = await api.post('/api/categorias').send({ nombre });
   return res.body;
 }
+
+export async function crearProblema(api, datos = {}) {
+  const categoriaId = datos.categoriaId ?? (await crearCategoria(api, `Cat ${Math.random()}`)).id;
+  const res = await api.post('/api/problemas').send({ nombre: 'Llegar tarde', categoriaId, ...datos });
+  return res.body;
+}
