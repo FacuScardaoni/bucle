@@ -40,3 +40,13 @@ export async function crearOcurrencia(api, problemaId, dias = 1, datos = {}) {
     .send({ fecha: haceDias(dias), descripcion: 'Me volvió a pasar', gravedad: 3, ...datos });
   return res.body;
 }
+
+// Crea una solución aplicada N días antes de AHORA y, opcionalmente, la evalúa.
+export async function crearSolucion(api, problemaId, { dias = 10, nombre, resultado, observaciones } = {}) {
+  const res = await api.post(`/api/problemas/${problemaId}/soluciones`)
+    .send({ nombre: nombre ?? `Solución ${Math.random()}`, fechaAplicacion: diaRelativo(-dias) });
+  if (!resultado) return res.body;
+  const evaluada = await api.patch(`/api/soluciones/${res.body.id}/evaluacion`)
+    .send({ resultado, observaciones: observaciones ?? 'Observaciones de prueba' });
+  return evaluada.body;
+}
