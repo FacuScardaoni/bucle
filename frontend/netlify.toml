@@ -1,0 +1,11 @@
+# Configuración de Netlify para el frontend de Bucle.
+# En Netlify: Base directory = frontend. No hay paso de compilación: se publican los archivos tal cual.
+[build]
+  publish = "."
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"

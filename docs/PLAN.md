@@ -23,7 +23,7 @@ Cada tarea es **un commit**. El mensaje del commit empieza con el código de la 
 - [x] **T-17** Frontend: estructura, cliente de API, listado con búsqueda y filtros (RN-19)
 - [x] **T-18** Frontend: detalle, ocurrencias, soluciones, evaluación y estados (RN-09 a RN-17)
 - [x] **T-19** Frontend: historial, estadísticas, categorías y resumen (RN-20 a RN-22)
-- [ ] **T-20** Publicación del frontend en Netlify y configuración de CORS
+- [x] **T-20** Publicación del frontend en Netlify y configuración de CORS
 - [ ] **T-21** Prueba de humo en producción, informe de pruebas y README final
 
 ## Decisiones
@@ -55,3 +55,4 @@ Decisiones tomadas durante el desarrollo sobre puntos que la spec no detalla. En
 | D-21 | Datos de demo con patrón | En `seed.sql`, las ocurrencias de "Llegar tarde al trabajo" se cuentan desde el lunes de la semana de carga, para que la demo muestre siempre el patrón "lunes a la mañana". |
 | D-22 | Pestaña inicial del detalle | Al abrir un problema se muestra el historial (RN-22); cada pestaña tiene su dirección (`#/problemas/3/soluciones`) para poder volver o compartirla. |
 | D-23 | Conexión con Neon | Neon rechaza conexiones sin cifrar. El servidor activa SSL siempre que la base no esté en la propia computadora, aunque la dirección no traiga `sslmode`. Si no puede conectarse al arrancar, escribe en los logs un mensaje corto con el motivo (sin mostrar la dirección, que contiene la contraseña). La T-16 se completó después de la T-19 porque dependía de crear las cuentas de Neon y Render. |
+| D-24 | Publicación del frontend | Netlify publica la carpeta `frontend` sin compilar (`frontend/netlify.toml`). La dirección de la API está en `frontend/js/config.js` (no es secreta). En Render, `CORS_ORIGIN` se configura con la dirección de Netlify para que solo ese sitio pueda usar la API desde el navegador. |

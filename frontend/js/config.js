@@ -4,4 +4,4 @@ const ES_LOCAL = ['localhost', '127.0.0.1'].includes(location.hostname);
 
 export const API_URL = ES_LOCAL
   ? 'http://localhost:3000/api'
-  : 'https://bucle-api.onrender.com/api';
+  : 'https://bucle.onrender.com/api';
