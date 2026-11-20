@@ -1,4 +1,4 @@
-import { validarProblema, valoresIniciales, datosDerivados } from '../dominio/problema.js';
+import { validarProblema, valoresIniciales, datosDerivados, calcularPrioridad } from '../dominio/problema.js';
 import { asegurarNombreUnico, idValido } from '../dominio/validaciones.js';
 import { errorNoEncontrado } from '../dominio/errores.js';
 
@@ -25,6 +25,7 @@ export function crearServicioProblemas({ repos, reloj, categorias }) {
       ...vista,
       categoriaNombre: categoria?.nombre ?? null,
       ...datosDerivados(ocurrencias),
+      prioridad: calcularPrioridad(ocurrencias, reloj.ahora()),
     };
   }
 

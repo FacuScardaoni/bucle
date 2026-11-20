@@ -1,6 +1,7 @@
 import { textoObligatorio, textoOpcional, normalizar, idValido } from './validaciones.js';
 import { errorValidacion } from './errores.js';
-import { ESTADOS } from './enums.js';
+import { ESTADOS, PRIORIDADES } from './enums.js';
+import { restarDias } from './fechas.js';
 
 // RN-04 y RN-05: datos editables de un problema.
 // Estado, fechas, cantidad y prioridad NO se toman del cliente (RN-06).
@@ -26,4 +27,21 @@ export function valoresIniciales(ahora) {
 export function datosDerivados(ocurrencias) {
   const ultima = ocurrencias.reduce((max, o) => (!max || o.fecha > max ? o.fecha : max), null);
   return { cantidadOcurrencias: ocurrencias.length, fechaUltimaOcurrencia: ultima };
+}
+
+export const DIAS_VENTANA_PRIORIDAD = 30;
+
+// Ocurrencias dentro de los últimos N días (sin contar fechas futuras).
+export function ocurrenciasRecientes(ocurrencias, ahora, dias) {
+  const desde = restarDias(ahora, dias);
+  return ocurrencias.filter((o) => o.fecha > desde && o.fecha <= ahora);
+}
+
+// RN-08: prioridad según las ocurrencias de los últimos 30 días.
+// 0-1 → BAJA, 2-4 → MEDIA, 5+ → ALTA. Una ocurrencia con gravedad 4 o 5 sube un nivel (máximo ALTA).
+export function calcularPrioridad(ocurrencias, ahora) {
+  const recientes = ocurrenciasRecientes(ocurrencias, ahora, DIAS_VENTANA_PRIORIDAD);
+  let nivel = recientes.length >= 5 ? 2 : recientes.length >= 2 ? 1 : 0;
+  if (recientes.some((o) => o.gravedad >= 4)) nivel = Math.min(nivel + 1, 2);
+  return PRIORIDADES[nivel];
 }

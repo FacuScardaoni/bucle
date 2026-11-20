@@ -91,3 +91,13 @@ test('editar o eliminar una ocurrencia inexistente responde 404', async () => {
   assert.equal((await api.put('/api/ocurrencias/999').send(valida())).status, 404);
   assert.equal((await api.delete('/api/ocurrencias/999')).status, 404);
 });
+
+test('RN-08 la prioridad del problema se recalcula al registrar ocurrencias', async () => {
+  const { api } = crearContexto();
+  const problema = await crearProblema(api);
+  assert.equal((await api.get(`/api/problemas/${problema.id}`)).body.prioridad, 'BAJA');
+  for (let i = 1; i <= 4; i++) await crearOcurrencia(api, problema.id, i);
+  assert.equal((await api.get(`/api/problemas/${problema.id}`)).body.prioridad, 'MEDIA');
+  await crearOcurrencia(api, problema.id, 5, { gravedad: 4 });
+  assert.equal((await api.get(`/api/problemas/${problema.id}`)).body.prioridad, 'ALTA');
+});
