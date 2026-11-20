@@ -91,5 +91,5 @@ export function fechaCalendarioValida(valor, campo, regla) {
 // Se usa para las reglas de nombre único (RN-02, RN-04, RN-11).
 export function asegurarNombreUnico(registros, nombreNormalizado, idExcluido, mensaje, regla) {
   const repetido = registros.some((r) => r.nombreNormalizado === nombreNormalizado && r.id !== idExcluido);
-  if (repetido) throw errorConflicto(mensaje, regla);
+  if (repetido) throw errorConflicto(mensaje, regla, undefined, 'nombre');
 }

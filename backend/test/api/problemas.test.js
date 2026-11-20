@@ -33,6 +33,7 @@ test('RN-04 no puede haber dos problemas con el mismo nombre (sin importar mayú
   const res = await api.post('/api/problemas').send({ nombre: 'OLVIDAR  las LLÁVES', categoriaId: cat.id });
   assert.equal(res.status, 409);
   assert.equal(res.body.error.regla, 'RN-04');
+  assert.equal(res.body.error.campo, 'nombre');
 });
 
 test('RN-05 la categoría es obligatoria y debe existir', async () => {

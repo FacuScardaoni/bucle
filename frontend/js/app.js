@@ -2,12 +2,14 @@
 import { api, ErrorApi } from './api.js';
 import { h, vaciar } from './ui.js';
 import { mostrarListado } from './vistas/listado.js';
+import { mostrarDetalle } from './vistas/detalle.js';
 
 const contenido = document.getElementById('contenido');
 
 // Cada ruta: expresión, sección del menú que se marca y función que dibuja la pantalla.
 const rutas = [
   { patron: /^#?\/?$/, seccion: 'problemas', mostrar: () => mostrarListado(contenido) },
+  { patron: /^#\/problemas\/(\d+)(?:\/([a-z]+))?$/, seccion: 'problemas', mostrar: (id, pestana) => mostrarDetalle(contenido, id, pestana) },
 ];
 
 async function navegar() {

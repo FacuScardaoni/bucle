@@ -40,41 +40,43 @@ VALUES ('Olvidar responder mensajes importantes', 'olvidar responder mensajes im
         (SELECT id FROM categorias WHERE nombre_normalizado = 'olvidos'), 'ACTIVO',
         current_date - 3, current_date - 3);
 
--- Ocurrencias: (problema, días atrás, hora, descripción, contexto, posible causa, gravedad)
+-- Ocurrencias: (problema, días atrás, desde cuándo se cuentan, hora, descripción, contexto, posible causa, gravedad)
+-- 'lunes' cuenta desde el lunes de esta semana, para que "Llegar tarde" caiga siempre en lunes (salvo una en miércoles).
 INSERT INTO ocurrencias (problema_id, fecha, descripcion, contexto, posible_causa, gravedad)
-SELECT p.id, current_date - o.dias + o.hora, o.descripcion, o.contexto, o.causa, o.gravedad
+SELECT p.id,
+       CASE o.ancla WHEN 'lunes' THEN date_trunc('week', current_date)::date ELSE current_date END - o.dias + o.hora, o.descripcion, o.contexto, o.causa, o.gravedad
 FROM (VALUES
-  ('llegar tarde al trabajo', 45, time '09:20', 'Llegué 20 minutos tarde',        'Lunes, colectivo lleno',  'Me quedé dormido',             3),
-  ('llegar tarde al trabajo', 38, time '09:10', 'Llegué 10 minutos tarde',        'Lunes',                   'Salí sin desayunar igual tarde', 2),
-  ('llegar tarde al trabajo', 31, time '09:35', 'Llegué tarde a la reunión de equipo', 'Lunes, lluvia',      'No encontraba la ropa',        4),
-  ('llegar tarde al trabajo', 24, time '09:15', 'Llegué 15 minutos tarde',        'Lunes',                   'Me quedé dormido',             3),
-  ('llegar tarde al trabajo', 17, time '09:05', 'Llegué 5 minutos tarde',         'Miércoles',               NULL,                           1),
-  ('llegar tarde al trabajo', 10, time '09:40', 'Perdí el inicio de una reunión', 'Lunes, lluvia',           'Corte de subte',               4),
-  ('llegar tarde al trabajo',  3, time '09:10', 'Llegué 10 minutos tarde',        'Lunes',                   'Me quedé dormido',             2),
+  ('llegar tarde al trabajo', 49, 'lunes', time '09:20', 'Llegué 20 minutos tarde',        'Lunes, colectivo lleno',  'Me quedé dormido',             3),
+  ('llegar tarde al trabajo', 42, 'lunes', time '09:10', 'Llegué 10 minutos tarde',        'Lunes',                   'Salí sin desayunar igual tarde', 2),
+  ('llegar tarde al trabajo', 35, 'lunes', time '09:35', 'Llegué tarde a la reunión de equipo', 'Lunes, lluvia',      'No encontraba la ropa',        4),
+  ('llegar tarde al trabajo', 28, 'lunes', time '09:15', 'Llegué 15 minutos tarde',        'Lunes',                   'Me quedé dormido',             3),
+  ('llegar tarde al trabajo', 19, 'lunes', time '09:05', 'Llegué 5 minutos tarde',         'Miércoles',               NULL,                           1),
+  ('llegar tarde al trabajo', 14, 'lunes', time '09:40', 'Perdí el inicio de una reunión', 'Lunes, lluvia',           'Corte de subte',               4),
+  ('llegar tarde al trabajo',  7, 'lunes', time '09:10', 'Llegué 10 minutos tarde',        'Lunes',                   'Me quedé dormido',             2),
 
-  ('olvidar la billetera', 55, time '13:00', 'No pude pagar el almuerzo',  'Trabajo',  'Cambié de mochila',  3),
-  ('olvidar la billetera', 50, time '08:30', 'Volví a buscarla a casa',    'Mañana',   'Salí apurado',       2),
-  ('olvidar la billetera', 46, time '19:00', 'No pude cargar la SUBE',     'Estación', NULL,                 3),
-  ('olvidar la billetera', 41, time '12:30', 'Me prestaron plata',         'Trabajo',  'Cambié de mochila',  2),
-  ('olvidar la billetera', 37, time '08:45', 'Volví a buscarla a casa',    'Mañana',   'Salí apurado',       2),
-  ('olvidar la billetera', 34, time '20:15', 'No pude pagar en el súper',  'Súper',    NULL,                 3),
-  ('olvidar la billetera', 16, time '08:40', 'Volví a buscarla a casa',    'Mañana',   'La dejé en el auto', 1),
+  ('olvidar la billetera', 55, 'hoy', time '13:00', 'No pude pagar el almuerzo',  'Trabajo',  'Cambié de mochila',  3),
+  ('olvidar la billetera', 50, 'hoy', time '08:30', 'Volví a buscarla a casa',    'Mañana',   'Salí apurado',       2),
+  ('olvidar la billetera', 46, 'hoy', time '19:00', 'No pude cargar la SUBE',     'Estación', NULL,                 3),
+  ('olvidar la billetera', 41, 'hoy', time '12:30', 'Me prestaron plata',         'Trabajo',  'Cambié de mochila',  2),
+  ('olvidar la billetera', 37, 'hoy', time '08:45', 'Volví a buscarla a casa',    'Mañana',   'Salí apurado',       2),
+  ('olvidar la billetera', 34, 'hoy', time '20:15', 'No pude pagar en el súper',  'Súper',    NULL,                 3),
+  ('olvidar la billetera', 16, 'hoy', time '08:40', 'Volví a buscarla a casa',    'Mañana',   'La dejé en el auto', 1),
 
-  ('gastar de mas en delivery', 33, time '22:00', 'Pedí pizza',              'Día largo de trabajo', 'Cansancio',        2),
-  ('gastar de mas en delivery', 26, time '21:30', 'Pedí sushi',              'Viernes',              'Antojo',           3),
-  ('gastar de mas en delivery', 19, time '22:15', 'Pedí hamburguesas',       'Heladera vacía',       'No hice compras',  3),
-  ('gastar de mas en delivery', 12, time '21:45', 'Pedí empanadas',          'Día largo de trabajo', 'Cansancio',        2),
-  ('gastar de mas en delivery',  4, time '22:30', 'Pedí comida dos veces',   'Fin de semana',        'Antojo',           4),
+  ('gastar de mas en delivery', 33, 'hoy', time '22:00', 'Pedí pizza',              'Día largo de trabajo', 'Cansancio',        2),
+  ('gastar de mas en delivery', 26, 'hoy', time '21:30', 'Pedí sushi',              'Viernes',              'Antojo',           3),
+  ('gastar de mas en delivery', 19, 'hoy', time '22:15', 'Pedí hamburguesas',       'Heladera vacía',       'No hice compras',  3),
+  ('gastar de mas en delivery', 12, 'hoy', time '21:45', 'Pedí empanadas',          'Día largo de trabajo', 'Cansancio',        2),
+  ('gastar de mas en delivery', 4, 'hoy', time '22:30', 'Pedí comida dos veces',   'Fin de semana',        'Antojo',           4),
 
-  ('usar el celular antes de dormir', 60, time '00:30', 'Dormí 5 horas',            'Redes sociales', 'Videos cortos', 3),
-  ('usar el celular antes de dormir', 55, time '01:00', 'Me costó levantarme',      'Redes sociales', 'Videos cortos', 3),
-  ('usar el celular antes de dormir', 50, time '00:45', 'Dormí 5 horas',            'Series',         NULL,            2),
-  ('usar el celular antes de dormir', 46, time '01:15', 'Llegué cansado al trabajo','Redes sociales', 'Videos cortos', 4),
-  ('usar el celular antes de dormir', 39, time '00:20', 'Me dormí tarde',           'Mensajes',       NULL,            2),
-  ('usar el celular antes de dormir', 27, time '23:50', 'Me dormí tarde',           'Redes sociales', NULL,            1),
+  ('usar el celular antes de dormir', 60, 'hoy', time '00:30', 'Dormí 5 horas',            'Redes sociales', 'Videos cortos', 3),
+  ('usar el celular antes de dormir', 55, 'hoy', time '01:00', 'Me costó levantarme',      'Redes sociales', 'Videos cortos', 3),
+  ('usar el celular antes de dormir', 50, 'hoy', time '00:45', 'Dormí 5 horas',            'Series',         NULL,            2),
+  ('usar el celular antes de dormir', 46, 'hoy', time '01:15', 'Llegué cansado al trabajo','Redes sociales', 'Videos cortos', 4),
+  ('usar el celular antes de dormir', 39, 'hoy', time '00:20', 'Me dormí tarde',           'Mensajes',       NULL,            2),
+  ('usar el celular antes de dormir', 27, 'hoy', time '23:50', 'Me dormí tarde',           'Redes sociales', NULL,            1),
 
-  ('olvidar responder mensajes importantes', 2, time '18:00', 'No le respondí al contador', 'Trabajo', 'Lo leí y lo dejé para después', 3)
-) AS o (problema, dias, hora, descripcion, contexto, causa, gravedad)
+  ('olvidar responder mensajes importantes', 2, 'hoy', time '18:00', 'No le respondí al contador', 'Trabajo', 'Lo leí y lo dejé para después', 3)
+) AS o (problema, dias, ancla, hora, descripcion, contexto, causa, gravedad)
 JOIN problemas p ON p.nombre_normalizado = o.problema;
 
 -- Soluciones: (problema, nombre, descripción, días atrás de aplicación, resultado, observaciones, días atrás de evaluación)

@@ -21,7 +21,7 @@ Cada tarea es **un commit**. El mensaje del commit empieza con el código de la 
 - [x] **T-15** Repositorios PostgreSQL, `schema.sql` y `seed.sql`
 - [ ] **T-16** Publicación: base de datos en Neon y backend en Render
 - [x] **T-17** Frontend: estructura, cliente de API, listado con búsqueda y filtros (RN-19)
-- [ ] **T-18** Frontend: detalle, ocurrencias, soluciones, evaluación y estados (RN-09 a RN-17)
+- [x] **T-18** Frontend: detalle, ocurrencias, soluciones, evaluación y estados (RN-09 a RN-17)
 - [ ] **T-19** Frontend: historial, estadísticas, categorías y resumen (RN-20 a RN-22)
 - [ ] **T-20** Publicación del frontend en Netlify y configuración de CORS
 - [ ] **T-21** Prueba de humo en producción, informe de pruebas y README final
@@ -51,3 +51,5 @@ Decisiones tomadas durante el desarrollo sobre puntos que la spec no detalla. En
 | D-17 | Tests contra PostgreSQL | `npm test` usa repositorios en memoria (rápido, sin base). `npm run test:db` corre el contrato de repositorios, un recorrido completo de la API y la verificación del seed contra una base PostgreSQL de prueba (`DATABASE_URL_TEST`). La implementación en memoria no tiene rollback real; por eso el rollback se prueba solo en PostgreSQL. |
 | D-18 | Anillo de actividad | Cada problema del listado muestra un anillo con los últimos 30 días (una marca por día; las marcas con ocurrencias se resaltan con el color de la prioridad). Para dibujarlo, la API agrega al problema el campo calculado `actividad30Dias` (ocurrencias por día, índice 0 = hoy). |
 | D-19 | Frontend sin dependencias | JavaScript con módulos ES nativos, sin frameworks ni paso de compilación. Los textos del usuario se insertan siempre como texto (nunca como HTML) para evitar inyección de código. Tipografías: Familjen Grotesk (títulos) y Atkinson Hyperlegible (texto, pensada para lectura fácil). |
+| D-20 | Errores de nombre repetido | Los conflictos de nombre (RN-02, RN-04, RN-11) indican `campo: "nombre"`, así la interfaz muestra el mensaje junto al campo. |
+| D-21 | Datos de demo con patrón | En `seed.sql`, las ocurrencias de "Llegar tarde al trabajo" se cuentan desde el lunes de la semana de carga, para que la demo muestre siempre el patrón "lunes a la mañana". |

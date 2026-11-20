@@ -29,6 +29,6 @@ export function errorNoEncontrado(mensaje, regla) {
   return new ErrorBucle('NO_ENCONTRADO', 404, mensaje, { regla });
 }
 
-export function errorConflicto(mensaje, regla, detalles) {
-  return new ErrorBucle('CONFLICTO', 409, mensaje, { regla, detalles });
+export function errorConflicto(mensaje, regla, detalles, campo) {
+  return new ErrorBucle('CONFLICTO', 409, mensaje, { regla, detalles, campo });
 }

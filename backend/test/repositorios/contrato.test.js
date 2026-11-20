@@ -167,6 +167,8 @@ describe('PostgreSQL', { skip: !URL_PRUEBA && 'definí DATABASE_URL_TEST para pr
       assert.doesNotThrow(() => verificarConsistencia(p.estado, soluciones), p.nombre);
       assert.ok(!p.fechaUltimaOcurrencia || p.fechaUltimaOcurrencia <= new Date(), p.nombre);
     }
+    const tarde = await servicios.consultas.estadisticasProblema(porNombre['Llegar tarde al trabajo'].id);
+    assert.equal(tarde.diaMasFrecuente.dia, 'lunes');
     const billetera = await servicios.soluciones.listarPorProblema(porNombre['Olvidar la billetera'].id);
     assert.equal(billetera[0].efectividad.estado, 'CALCULADA');
     assert.ok(billetera[0].efectividad.mejoraPorcentaje > 50);
