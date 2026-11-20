@@ -5,7 +5,7 @@ Cada tarea es **un commit**. El mensaje del commit empieza con el código de la 
 ## Tareas
 
 - [x] **T-01** Estructura del repo, README inicial, `.gitignore`, `AGENTS.md`, `docs/SPEC.md` y `docs/PLAN.md`
-- [ ] **T-02** Backend base: Express, `/api/salud`, manejo central de errores, primer test (RN-01)
+- [x] **T-02** Backend base: Express, `/api/salud`, manejo central de errores, primer test (RN-01)
 - [ ] **T-03** Dominio: enums, errores, validaciones de texto y reloj inyectable (RN-01)
 - [ ] **T-04** Categorías: dominio, repositorio en memoria, servicio, rutas y tests (RN-02, RN-03)
 - [ ] **T-05** Problemas: crear, consultar y editar (RN-04 a RN-06)
