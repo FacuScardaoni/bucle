@@ -16,7 +16,7 @@ Cada tarea es **un commit**. El mensaje del commit empieza con el código de la 
 - [x] **T-10** Recaída automática (RN-10)
 - [x] **T-11** Eliminación con confirmación y en cascada (RN-18)
 - [x] **T-12** Búsqueda, filtros y orden (RN-19)
-- [ ] **T-13** Historial (RN-22)
+- [x] **T-13** Historial (RN-22)
 - [ ] **T-14** Estadísticas y efectividad (RN-20, RN-21)
 - [ ] **T-15** Repositorios PostgreSQL, `schema.sql` y `seed.sql`
 - [ ] **T-16** Publicación: base de datos en Neon y backend en Render
@@ -44,3 +44,4 @@ Decisiones tomadas durante el desarrollo sobre puntos que la spec no detalla. En
 | D-10 | Alcance de RN-17 | La consistencia se verifica solo sobre la condición de soluciones (RN-14 / RN-15), que es lo único que cambia al eliminar o reevaluar una solución. |
 | D-11 | Aviso de recaída | Al crear o editar una ocurrencia, la respuesta incluye `recaida: true/false` para que la interfaz avise que el problema volvió a ACTIVO. La ocurrencia y el cambio de estado se guardan en la misma transacción. |
 | D-12 | Parámetros de búsqueda | `GET /api/problemas?q=&categoria=&estado=&prioridad=`. Un parámetro vacío equivale a no enviarlo. Repetir un parámetro (`?estado=A&estado=B`) da error 400. Ante empate de prioridad y fecha, se ordena por nombre. |
+| D-13 | Eventos del historial | Tipos: `OCURRENCIA`, `SOLUCION_APLICADA` (al inicio del día de aplicación, hora de Argentina), `SOLUCION_EVALUADA` (última evaluación) y `CAMBIO_ESTADO`. Con la misma fecha, el orden es: cambio de estado, evaluación, aplicación, ocurrencia. |
