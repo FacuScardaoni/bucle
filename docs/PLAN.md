@@ -24,7 +24,7 @@ Cada tarea es **un commit**. El mensaje del commit empieza con el código de la 
 - [x] **T-18** Frontend: detalle, ocurrencias, soluciones, evaluación y estados (RN-09 a RN-17)
 - [x] **T-19** Frontend: historial, estadísticas, categorías y resumen (RN-20 a RN-22)
 - [x] **T-20** Publicación del frontend en Netlify y configuración de CORS
-- [ ] **T-21** Prueba de humo en producción, informe de pruebas y README final
+- [x] **T-21** Prueba de humo en producción, informe de pruebas y README final
 
 ## Decisiones
 
