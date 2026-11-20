@@ -1,6 +1,8 @@
 import { validarProblema, valoresIniciales, datosDerivados, calcularPrioridad } from '../dominio/problema.js';
 import { asegurarNombreUnico, idValido } from '../dominio/validaciones.js';
 import { errorNoEncontrado } from '../dominio/errores.js';
+import { validarCambioEstado } from '../dominio/estados.js';
+import { MOTIVOS_CAMBIO } from '../dominio/enums.js';
 
 function agruparPorProblema(registros) {
   const grupos = new Map();
@@ -45,8 +47,19 @@ export function crearServicioProblemas({ repos, reloj, categorias }) {
     return valido;
   }
 
+  // Cambia el estado y deja el registro para el historial (RN-16).
+  // Recibe los repositorios de la transacción en curso.
+  async function aplicarCambioEstado(r, problema, estadoNuevo, motivo) {
+    const ahora = reloj.ahora();
+    await r.cambiosEstado.crear({
+      problemaId: problema.id, estadoAnterior: problema.estado, estadoNuevo, motivo, fecha: ahora,
+    });
+    return r.problemas.actualizar(problema.id, { estado: estadoNuevo, fechaEstado: ahora });
+  }
+
   return {
     obtenerOFallar,
+    aplicarCambioEstado,
 
     async listar() {
       const [problemas, cats, ocurrencias] = await Promise.all([
@@ -72,6 +85,19 @@ export function crearServicioProblemas({ repos, reloj, categorias }) {
       const actual = await obtenerOFallar(id);
       const valido = await validarYVerificar(datos, actual.id);
       return vistaDe(await repos.problemas.actualizar(actual.id, valido));
+    },
+
+    // RN-14 a RN-16: cambio manual de estado.
+    async cambiarEstado(id, datos = {}) {
+      const problema = await obtenerOFallar(id);
+      const [soluciones, ocurrencias] = await Promise.all([
+        repos.soluciones.listar({ problemaId: problema.id }),
+        repos.ocurrencias.listar({ problemaId: problema.id }),
+      ]);
+      validarCambioEstado(problema, datos.estado, soluciones, ocurrencias, reloj.ahora());
+      const actualizado = await repos.transaccion((r) =>
+        aplicarCambioEstado(r, problema, datos.estado, MOTIVOS_CAMBIO.MANUAL));
+      return vistaDe(actualizado);
     },
   };
 }

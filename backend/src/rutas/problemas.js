@@ -19,5 +19,9 @@ export function crearRutasProblemas({ problemas }) {
     res.json(await problemas.actualizar(req.params.id, req.body));
   });
 
+  rutas.patch('/:id/estado', async (req, res) => {
+    res.json(await problemas.cambiarEstado(req.params.id, req.body));
+  });
+
   return rutas;
 }

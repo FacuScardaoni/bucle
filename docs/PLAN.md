@@ -12,7 +12,7 @@ Cada tarea es **un commit**. El mensaje del commit empieza con el código de la 
 - [x] **T-06** Ocurrencias: CRUD y datos derivados (RN-07, RN-09)
 - [x] **T-07** Prioridad calculada (RN-08)
 - [x] **T-08** Soluciones: CRUD y evaluación (RN-11 a RN-13)
-- [ ] **T-09** Estados, cambios de estado y consistencia (RN-14 a RN-17)
+- [x] **T-09** Estados, cambios de estado y consistencia (RN-14 a RN-17)
 - [ ] **T-10** Recaída automática (RN-10)
 - [ ] **T-11** Eliminación con confirmación y en cascada (RN-18)
 - [ ] **T-12** Búsqueda, filtros y orden (RN-19)
@@ -40,3 +40,5 @@ Decisiones tomadas durante el desarrollo sobre puntos que la spec no detalla. En
 | D-06 | Listado de categorías | Cada categoría incluye `cantidadProblemas`, para que la interfaz sepa si se puede borrar (RN-03) sin otra consulta. |
 | D-07 | Ventana de 30 días | "Últimos 30 días" = ocurrencias con fecha posterior a `ahora − 30 días` y no posterior a `ahora`. |
 | D-08 | Solución evaluada con fecha futura | Como una solución futura no se puede evaluar (RN-13), tampoco se permite editar la fecha de aplicación de una solución ya evaluada a una fecha futura. Una solución aplicada "hoy" ya puede evaluarse. |
+| D-09 | Ventana de 14 días (RN-15) | Se aplica igual que la de 30 días: ocurrencias con fecha posterior a `ahora − 14 días`. Si faltan varias condiciones, el error las lista todas en `detalles.faltan`. |
+| D-10 | Alcance de RN-17 | La consistencia se verifica solo sobre la condición de soluciones (RN-14 / RN-15), que es lo único que cambia al eliminar o reevaluar una solución. |
