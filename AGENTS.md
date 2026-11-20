@@ -25,6 +25,8 @@ npm install          # instalar dependencias
 npm test             # correr todos los tests (deben pasar al 100 %)
 npm run dev          # servidor local en http://localhost:3000 (sin DATABASE_URL usa memoria)
 npm start            # servidor en producción
+npm run seed         # carga datos de demostración (solo si la base está vacía; requiere DATABASE_URL)
+npm run test:db      # contrato de repositorios contra PostgreSQL (requiere DATABASE_URL_TEST, una base de PRUEBA)
 ```
 
 El frontend se abre con cualquier servidor estático, por ejemplo `npx serve frontend`.

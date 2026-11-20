@@ -18,7 +18,7 @@ Cada tarea es **un commit**. El mensaje del commit empieza con el código de la 
 - [x] **T-12** Búsqueda, filtros y orden (RN-19)
 - [x] **T-13** Historial (RN-22)
 - [x] **T-14** Estadísticas y efectividad (RN-20, RN-21)
-- [ ] **T-15** Repositorios PostgreSQL, `schema.sql` y `seed.sql`
+- [x] **T-15** Repositorios PostgreSQL, `schema.sql` y `seed.sql`
 - [ ] **T-16** Publicación: base de datos en Neon y backend en Render
 - [ ] **T-17** Frontend: estructura, cliente de API, listado con búsqueda y filtros (RN-19)
 - [ ] **T-18** Frontend: detalle, ocurrencias, soluciones, evaluación y estados (RN-09 a RN-17)
@@ -46,3 +46,6 @@ Decisiones tomadas durante el desarrollo sobre puntos que la spec no detalla. En
 | D-12 | Parámetros de búsqueda | `GET /api/problemas?q=&categoria=&estado=&prioridad=`. Un parámetro vacío equivale a no enviarlo. Repetir un parámetro (`?estado=A&estado=B`) da error 400. Ante empate de prioridad y fecha, se ordena por nombre. |
 | D-13 | Eventos del historial | Tipos: `OCURRENCIA`, `SOLUCION_APLICADA` (al inicio del día de aplicación, hora de Argentina), `SOLUCION_EVALUADA` (última evaluación) y `CAMBIO_ESTADO`. Con la misma fecha, el orden es: cambio de estado, evaluación, aplicación, ocurrencia. |
 | D-14 | Efectividad y mejor solución | Los días de observación se cuentan desde el inicio del día de aplicación (hora de Argentina). Una solución con fecha futura tiene efectividad `PLANIFICADA`. La "mejor solución" es la de mayor mejora **positiva**; si ninguna mejoró, es `null`. Ante empate en día o franja más frecuente, gana el primero (lunes antes que martes; mañana antes que tarde). |
+| D-15 | Creación de tablas | `db/schema.sql` es idempotente (`CREATE TABLE IF NOT EXISTS`) y el servidor lo ejecuta al arrancar. No hace falta correr migraciones a mano en Render. |
+| D-16 | Datos de demostración | `npm run seed` carga `db/seed.sql` solo si la base está vacía. Las fechas son relativas al día de carga, así los estados, prioridades y estadísticas de la demo siempre cumplen las reglas. |
+| D-17 | Tests contra PostgreSQL | `npm test` usa repositorios en memoria (rápido, sin base). `npm run test:db` corre el contrato de repositorios, un recorrido completo de la API y la verificación del seed contra una base PostgreSQL de prueba (`DATABASE_URL_TEST`). La implementación en memoria no tiene rollback real; por eso el rollback se prueba solo en PostgreSQL. |
