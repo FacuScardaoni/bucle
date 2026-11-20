@@ -1,9 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import request from 'supertest';
-import { crearApp } from '../../src/app.js';
+import { crearContexto } from '../ayudas.js';
 
-const app = crearApp();
+const { app } = crearContexto();
 
 test('GET /api/salud responde ok', async () => {
   const res = await request(app).get('/api/salud');

@@ -1,5 +1,5 @@
 // Validaciones genéricas de datos de entrada (RN-01 y reglas de formato de cada entidad).
-import { errorValidacion } from './errores.js';
+import { errorValidacion, errorConflicto } from './errores.js';
 
 // RN-01: recorta espacios; un texto vacío se considera no informado (null).
 export function limpiarTexto(valor, campo, regla = 'RN-01') {
@@ -85,4 +85,11 @@ export function fechaCalendarioValida(valor, campo, regla) {
     throw errorValidacion(`El campo "${campo}" debe ser una fecha con formato AAAA-MM-DD`, campo, regla);
   }
   return valor;
+}
+
+// Verifica que ningún otro registro de la lista tenga el mismo nombre normalizado.
+// Se usa para las reglas de nombre único (RN-02, RN-04, RN-11).
+export function asegurarNombreUnico(registros, nombreNormalizado, idExcluido, mensaje, regla) {
+  const repetido = registros.some((r) => r.nombreNormalizado === nombreNormalizado && r.id !== idExcluido);
+  if (repetido) throw errorConflicto(mensaje, regla);
 }
