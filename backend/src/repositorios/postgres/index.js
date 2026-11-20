@@ -126,8 +126,18 @@ export function crearRepositoriosPostgres(pool) {
   return repos;
 }
 
+// Las bases en la nube (Neon) exigen conexión cifrada. Se activa SSL siempre que la base
+// no esté en la propia computadora, aunque la dirección no traiga "sslmode".
+const HOSTS_LOCALES = ['localhost', '127.0.0.1', '::1', ''];
+
+export function opcionesDeConexion(connectionString) {
+  const host = new URL(connectionString).hostname.replace(/^\[|\]$/g, '');
+  const esLocal = HOSTS_LOCALES.includes(host);
+  return { connectionString, max: 5, ...(esLocal ? {} : { ssl: true }) };
+}
+
 export function crearPool(connectionString) {
-  return new pg.Pool({ connectionString, max: 5 });
+  return new pg.Pool(opcionesDeConexion(connectionString));
 }
 
 // Crea las tablas si no existen (db/schema.sql es idempotente).

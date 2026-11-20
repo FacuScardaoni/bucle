@@ -11,10 +11,17 @@ async function crearRepositorios() {
     console.warn('Sin DATABASE_URL: se usan datos en memoria (se pierden al reiniciar).');
     return crearRepositoriosMemoria();
   }
-  const pool = crearPool(process.env.DATABASE_URL);
-  await inicializarEsquema(pool);
-  console.log('Conectado a PostgreSQL.');
-  return crearRepositoriosPostgres(pool);
+  try {
+    const pool = crearPool(process.env.DATABASE_URL);
+    await inicializarEsquema(pool);
+    console.log('Conectado a PostgreSQL.');
+    return crearRepositoriosPostgres(pool);
+  } catch (error) {
+    // Mensaje corto y claro en los logs (sin mostrar la dirección, que contiene la contraseña).
+    console.error(`No se pudo conectar a la base de datos: ${error.message}${error.code ? ` (código ${error.code})` : ''}`);
+    console.error('Revisá la variable DATABASE_URL: tiene que ser la connection string de Neon, completa y sin comillas.');
+    process.exit(1);
+  }
 }
 
 // CORS_ORIGIN admite varios orígenes separados por coma (por ejemplo, Netlify y localhost).
