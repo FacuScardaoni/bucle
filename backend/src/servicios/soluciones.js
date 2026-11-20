@@ -5,6 +5,7 @@ import { asegurarNombreUnico, idValido } from '../dominio/validaciones.js';
 import { errorNoEncontrado } from '../dominio/errores.js';
 import { fechaCalendario } from '../dominio/fechas.js';
 import { verificarConsistencia } from '../dominio/estados.js';
+import { efectividadSolucion } from '../dominio/estadisticas.js';
 
 function aVista(solucion) {
   const { nombreNormalizado, ...vista } = solucion;
@@ -39,12 +40,16 @@ export function crearServicioSoluciones({ repos, reloj, problemas }) {
   return {
     obtenerOFallar,
 
+    // Incluye la efectividad calculada con datos (RN-20) junto a la evaluación del usuario.
     async listarPorProblema(problemaId) {
       const problema = await problemas.obtenerOFallar(problemaId);
-      const soluciones = await repos.soluciones.listar({ problemaId: problema.id });
+      const [soluciones, ocurrencias] = await Promise.all([
+        repos.soluciones.listar({ problemaId: problema.id }),
+        repos.ocurrencias.listar({ problemaId: problema.id }),
+      ]);
       return soluciones
         .sort((a, b) => b.fechaAplicacion.localeCompare(a.fechaAplicacion))
-        .map(aVista);
+        .map((s) => ({ ...aVista(s), efectividad: efectividadSolucion(s, ocurrencias, reloj.ahora()) }));
     },
 
     async crear(problemaId, datos) {

@@ -8,5 +8,13 @@ export function crearRutasConsultas({ consultas }) {
     res.json(await consultas.historial(req.params.id));
   });
 
+  rutas.get('/problemas/:id/estadisticas', async (req, res) => {
+    res.json(await consultas.estadisticasProblema(req.params.id));
+  });
+
+  rutas.get('/estadisticas', async (req, res) => {
+    res.json(await consultas.resumen());
+  });
+
   return rutas;
 }

@@ -17,7 +17,7 @@ Cada tarea es **un commit**. El mensaje del commit empieza con el código de la 
 - [x] **T-11** Eliminación con confirmación y en cascada (RN-18)
 - [x] **T-12** Búsqueda, filtros y orden (RN-19)
 - [x] **T-13** Historial (RN-22)
-- [ ] **T-14** Estadísticas y efectividad (RN-20, RN-21)
+- [x] **T-14** Estadísticas y efectividad (RN-20, RN-21)
 - [ ] **T-15** Repositorios PostgreSQL, `schema.sql` y `seed.sql`
 - [ ] **T-16** Publicación: base de datos en Neon y backend en Render
 - [ ] **T-17** Frontend: estructura, cliente de API, listado con búsqueda y filtros (RN-19)
@@ -45,3 +45,4 @@ Decisiones tomadas durante el desarrollo sobre puntos que la spec no detalla. En
 | D-11 | Aviso de recaída | Al crear o editar una ocurrencia, la respuesta incluye `recaida: true/false` para que la interfaz avise que el problema volvió a ACTIVO. La ocurrencia y el cambio de estado se guardan en la misma transacción. |
 | D-12 | Parámetros de búsqueda | `GET /api/problemas?q=&categoria=&estado=&prioridad=`. Un parámetro vacío equivale a no enviarlo. Repetir un parámetro (`?estado=A&estado=B`) da error 400. Ante empate de prioridad y fecha, se ordena por nombre. |
 | D-13 | Eventos del historial | Tipos: `OCURRENCIA`, `SOLUCION_APLICADA` (al inicio del día de aplicación, hora de Argentina), `SOLUCION_EVALUADA` (última evaluación) y `CAMBIO_ESTADO`. Con la misma fecha, el orden es: cambio de estado, evaluación, aplicación, ocurrencia. |
+| D-14 | Efectividad y mejor solución | Los días de observación se cuentan desde el inicio del día de aplicación (hora de Argentina). Una solución con fecha futura tiene efectividad `PLANIFICADA`. La "mejor solución" es la de mayor mejora **positiva**; si ninguna mejoró, es `null`. Ante empate en día o franja más frecuente, gana el primero (lunes antes que martes; mañana antes que tarde). |
