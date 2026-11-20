@@ -1,6 +1,15 @@
-import { validarProblema, valoresIniciales } from '../dominio/problema.js';
+import { validarProblema, valoresIniciales, datosDerivados } from '../dominio/problema.js';
 import { asegurarNombreUnico, idValido } from '../dominio/validaciones.js';
 import { errorNoEncontrado } from '../dominio/errores.js';
+
+function agruparPorProblema(registros) {
+  const grupos = new Map();
+  for (const r of registros) {
+    if (!grupos.has(r.problemaId)) grupos.set(r.problemaId, []);
+    grupos.get(r.problemaId).push(r);
+  }
+  return grupos;
+}
 
 export function crearServicioProblemas({ repos, reloj, categorias }) {
   async function obtenerOFallar(id) {
@@ -9,14 +18,22 @@ export function crearServicioProblemas({ repos, reloj, categorias }) {
     return problema;
   }
 
-  // Lo que devuelve la API: datos guardados + nombre de categoría.
-  function aVista(problema, categoria) {
+  // Lo que devuelve la API: datos guardados + nombre de categoría + valores calculados.
+  function aVista(problema, categoria, ocurrencias) {
     const { nombreNormalizado, ...vista } = problema;
-    return { ...vista, categoriaNombre: categoria?.nombre ?? null };
+    return {
+      ...vista,
+      categoriaNombre: categoria?.nombre ?? null,
+      ...datosDerivados(ocurrencias),
+    };
   }
 
   async function vistaDe(problema) {
-    return aVista(problema, await repos.categorias.obtener(problema.categoriaId));
+    const [categoria, ocurrencias] = await Promise.all([
+      repos.categorias.obtener(problema.categoriaId),
+      repos.ocurrencias.listar({ problemaId: problema.id }),
+    ]);
+    return aVista(problema, categoria, ocurrencias);
   }
 
   async function validarYVerificar(datos, idExcluido) {
@@ -31,9 +48,13 @@ export function crearServicioProblemas({ repos, reloj, categorias }) {
     obtenerOFallar,
 
     async listar() {
-      const [problemas, cats] = await Promise.all([repos.problemas.listar(), repos.categorias.listar()]);
-      const porId = new Map(cats.map((c) => [c.id, c]));
-      return problemas.map((p) => aVista(p, porId.get(p.categoriaId)));
+      const [problemas, cats, ocurrencias] = await Promise.all([
+        repos.problemas.listar(), repos.categorias.listar(), repos.ocurrencias.listar(),
+      ]);
+      const categoriasPorId = new Map(cats.map((c) => [c.id, c]));
+      const ocurrenciasPorProblema = agruparPorProblema(ocurrencias);
+      return problemas.map((p) =>
+        aVista(p, categoriasPorId.get(p.categoriaId), ocurrenciasPorProblema.get(p.id) ?? []));
     },
 
     async obtener(id) {

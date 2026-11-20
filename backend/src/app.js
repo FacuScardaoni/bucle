@@ -3,6 +3,7 @@ import cors from 'cors';
 import { rutaNoEncontrada, manejarErrores } from './rutas/errores.js';
 import { crearRutasCategorias } from './rutas/categorias.js';
 import { crearRutasProblemas } from './rutas/problemas.js';
+import { crearRutasOcurrencias } from './rutas/ocurrencias.js';
 
 // Arma la aplicación Express. No abre ningún puerto: eso lo hace server.js.
 // Los tests usan esta función directamente con supertest.
@@ -18,6 +19,7 @@ export function crearApp({ servicios, corsOrigin = '*' }) {
 
   app.use('/api/categorias', crearRutasCategorias(servicios));
   app.use('/api/problemas', crearRutasProblemas(servicios));
+  app.use('/api', crearRutasOcurrencias(servicios));
 
   app.use(rutaNoEncontrada);
   app.use(manejarErrores);

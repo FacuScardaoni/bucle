@@ -33,3 +33,10 @@ export async function crearProblema(api, datos = {}) {
   const res = await api.post('/api/problemas').send({ nombre: 'Llegar tarde', categoriaId, ...datos });
   return res.body;
 }
+
+// Registra una ocurrencia N días antes de AHORA.
+export async function crearOcurrencia(api, problemaId, dias = 1, datos = {}) {
+  const res = await api.post(`/api/problemas/${problemaId}/ocurrencias`)
+    .send({ fecha: haceDias(dias), descripcion: 'Me volvió a pasar', gravedad: 3, ...datos });
+  return res.body;
+}

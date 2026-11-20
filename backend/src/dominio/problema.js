@@ -21,3 +21,9 @@ export function validarProblema(datos = {}) {
 export function valoresIniciales(ahora) {
   return { estado: ESTADOS.ACTIVO, fechaCreacion: ahora, fechaEstado: ahora };
 }
+
+// RN-07: cantidad y fecha de la última ocurrencia se calculan siempre a partir de las ocurrencias.
+export function datosDerivados(ocurrencias) {
+  const ultima = ocurrencias.reduce((max, o) => (!max || o.fecha > max ? o.fecha : max), null);
+  return { cantidadOcurrencias: ocurrencias.length, fechaUltimaOcurrencia: ultima };
+}
